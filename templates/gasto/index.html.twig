@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GastosController!{% endblock %}
+
+
+
+{% block body %}
+    {{ parent() }}
+
+    <h2>Control de gastos</h2>
+
+<br>
+
+  <form action="{{ path ('agregar') }}" id="form_agreg" style="visibility: visible;" method="POST">  
+    <div class="mb-3">
+      <label class="form-label">¿En que gasté?</label>
+      <input type="text" class="form-control" name="descripcion" >
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Monto</label>
+      <input type="numeric" class="form-control" name="monto" rows="3"></input>
+    </div>
+    <input type="submit" class="btn btn-light" id="btn_submit" value="Agregar">        
+  </form> 
+
+  
+
+    <form action="{{ path ('prueba') }}" id="form_modif" style="visibility: hidden;" method="POST">  
+      <div class="mb-3">
+        <label class="form-label">¿En que gasté?</label>
+        <input type="text" class="form-control" name="descripcion" >
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Monto</label>
+        <input type="numeric" class="form-control" name="monto" rows="3"></input>
+      </div>
+      <input type="submit" class="btn btn-light" id="btn_submit" value="Modificar Final">    
+      <button class="btn btn-light" style="visibility: hidden"; id="btn_cancelar">Cancelar</button>    
+    </form> 
+
+
+
+
+
+
+
+<br>
+
+
+{# ------------------------------------------TABLA-------------------------------------- #}
+
+
+
+  <table class="table table-striped table-bordered table-sm " id="tabla">
+  <thead>
+    <tr>
+      <th scope="col">N°</th>
+      <th scope="col">Descripcion</th>
+      <th scope="col">Monto</th>      
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in listado %}
+      <tr>
+      <th scope="row">{{item.id}}</th>
+      <td>{{item.descripcion}} </td>
+      <td>${{item.monto}}</td>
+      <td>
+        <a onclick="modificar('{{item.id}}')" class="btn btn-light d-inline">Modificar</a>          
+        <a href="{{path('eliminar',{'id':item.id})}}" class="btn btn-light d-inline">Eliminar</a>                       
+      </td>      
+      </tr>
+
+      
+    {% endfor %}
+    
+  </tbody>
+</table>
+
+
+
+{#-----------------------------------------TABLA---------------------------------------------- #}
+
+<style>
+
+  button{
+    padding:0px;
+    margin: 0px;
+  }
+  .mb-3 {
+    margin: auto; 
+  display: inline-block;
+}
+
+body {
+  text-align: center;  
+  margin-top: 100px;
+  
+}
+table{
+  
+  margin: auto; 
+  max-width: 50%;
+  margin-top: 50px;
+
+}
+</style>
+{% endblock %}
+
+
+
+   
+
+
+{% block javascripts %}
+{{ parent() }}
+
+<script src="modificar.js" >
+  
+function modificar(id){   
+        
+    document.getElementById("form_modif").setAttribute("action","{{path('modificar')}}"+"/"+id) ;    
+    document.getElementById("form_agreg").style.visibility="hidden";
+    document.getElementById("form_modif").style.visibility="visible";
+    document.getElementById("btn_cancelar").style.visibility="visible";
+    
+
+}
+</script>
+  
+{% endblock %}
