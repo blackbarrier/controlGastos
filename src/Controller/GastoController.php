@@ -17,9 +17,17 @@ class GastoController extends AbstractController
     public function index(GastoRepository $repogasto): Response
     {
         $listado = $repogasto->findAll();
+        
+        $total=0;       
+        for($i=0;$i<count($listado);$i++){
+            $monto=$listado[$i]->getMonto();
+            $total+=$monto;            
+        };   
+
 
         return $this->render('gasto/index.html.twig', [
-            "listado"=>$listado
+            "listado"=>$listado,
+            "total"=>$total  
         ]);        
     }
 
@@ -29,6 +37,14 @@ class GastoController extends AbstractController
      */
     public function agregar(GastoRepository $repogasto )
     {
+
+        if (! $_POST
+            || trim($_POST['descripcion'])   === ''
+            || trim($_POST['monto'])     === ''
+            ) {
+            return $this->redirectToRoute('index');
+            }
+
         $descripcion=$_POST["descripcion"];
         $monto=$_POST["monto"];
         $item = new Gasto();
@@ -45,6 +61,13 @@ class GastoController extends AbstractController
      */
 
     public function modificar($id, GastoRepository  $repogasto)    {
+
+        if (! $_POST
+        || trim($_POST['descripcion'])   === ''
+        || trim($_POST['monto'])     === ''
+        ) {
+        return $this->redirectToRoute('index');
+        }
         
         $descripcion=$_POST["descripcion"];;
         $monto=$_POST["monto"];
@@ -66,23 +89,6 @@ class GastoController extends AbstractController
         $item = $repogasto->findOneBy(["id"=>$id]);
         $repogasto->remove($item,true);
         return $this->redirectToRoute('index');       
-        }
-
-    
-    /**
-     * @Route("/prueba", name="prueba")
-     */
-    public function prueba()     
-    {    
-        dd("FALLLAA");
-    }
-
-     /**
-     * @Route("/prueba2", name="prueba2")
-     */
-    public function prueba2()     
-    {    
-        dd("EXITOOOOOOOOOO");
-    }
+        }   
 
 }

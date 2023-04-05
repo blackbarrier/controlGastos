@@ -6,43 +6,37 @@
 
 {% block body %}
     {{ parent() }}
+    <img src="bailey-zindel-NRQV-hBF10M-unsplash.jpg" alt="fondo-naturaleza">
 
     <h2>Control de gastos</h2>
 
 <br>
-
   <form action="{{ path ('agregar') }}" id="form_agreg" style="visibility: visible;" method="POST">  
     <div class="mb-3">
       <label class="form-label">¿En que gasté?</label>
-      <input type="text" class="form-control" name="descripcion" >
+      <input type="text" class="form-control" name="descripcion">
     </div>
     <div class="mb-3">
       <label class="form-label">Monto</label>
-      <input type="numeric" class="form-control" name="monto" rows="3"></input>
+      <input type="number" class="form-control" name="monto" rows="3"></input>
     </div>
     <input type="submit" class="btn btn-light" id="btn_submit" value="Agregar">        
   </form> 
 
   
 
-    <form action="{{ path ('prueba') }}" id="form_modif" style="visibility: hidden;" method="POST">  
+    <form action="{{ path ('index') }}" id="form_modif" style="visibility: hidden;" method="POST">  
       <div class="mb-3">
         <label class="form-label">¿En que gasté?</label>
         <input type="text" class="form-control" name="descripcion" >
       </div>
       <div class="mb-3">
         <label class="form-label">Monto</label>
-        <input type="numeric" class="form-control" name="monto" rows="3"></input>
+        <input type="number" class="form-control" name="monto" rows="3"></input>
       </div>
-      <input type="submit" class="btn btn-light" id="btn_submit" value="Modificar Final">    
-      <button class="btn btn-light" style="visibility: hidden"; id="btn_cancelar">Cancelar</button>    
+      <input type="submit" class="btn btn-light" id="btn_submit" value="Modificar">          
     </form> 
-
-
-
-
-
-
+    <a class="btn btn-light" href="{{path('index')}}" style="visibility: hidden" id="btn_cancelar" onclick="cancelar()">Cancelar</a>
 
 <br>
 
@@ -50,28 +44,26 @@
 {# ------------------------------------------TABLA-------------------------------------- #}
 
 
-
-  <table class="table table-striped table-bordered table-sm " id="tabla">
-  <thead>
-    <tr>
-      <th scope="col">N°</th>
+  <div class="total">
+    Total: ${{total}}
+  </div>
+  <table class="table table-light table-striped-columns table-bordered table-sm" id="tabla">
+  <thead>      
       <th scope="col">Descripcion</th>
       <th scope="col">Monto</th>      
+      <th scope="col">Opciones</th>      
     </tr>
   </thead>
   <tbody>
     {% for item in listado %}
-      <tr>
-      <th scope="row">{{item.id}}</th>
+      <tr id="{{item.id}}">
       <td>{{item.descripcion}} </td>
       <td>${{item.monto}}</td>
       <td>
         <a onclick="modificar('{{item.id}}')" class="btn btn-light d-inline">Modificar</a>          
         <a href="{{path('eliminar',{'id':item.id})}}" class="btn btn-light d-inline">Eliminar</a>                       
       </td>      
-      </tr>
-
-      
+      </tr>      
     {% endfor %}
     
   </tbody>
@@ -83,6 +75,12 @@
 
 <style>
 
+  .total{
+    font-size: 50px;
+    font-weight:bolder ;
+    color: rgb(238, 80, 52);
+  }
+  
   button{
     padding:0px;
     margin: 0px;
@@ -93,15 +91,25 @@
 }
 
 body {
+  z-index: 0;
   text-align: center;  
-  margin-top: 100px;
+  margin-top: 50px;
   
 }
-table{
-  
+table{  
+  text-align: center;
   margin: auto; 
   max-width: 50%;
   margin-top: 50px;
+}
+
+img{
+  z-index: -1;
+  max-width: 100%;
+  position: absolute;
+  margin: auto;
+  left: 0px;
+  top: 0px;
 
 }
 </style>
@@ -115,17 +123,33 @@ table{
 {% block javascripts %}
 {{ parent() }}
 
-<script src="modificar.js" >
-  
-function modificar(id){   
-        
+<script >
+
+  var id_previa
+
+function modificar(id){
+    if (id_previa){
+      document.getElementById(id_previa).setAttribute("class", "table-light");
+    }
     document.getElementById("form_modif").setAttribute("action","{{path('modificar')}}"+"/"+id) ;    
     document.getElementById("form_agreg").style.visibility="hidden";
     document.getElementById("form_modif").style.visibility="visible";
     document.getElementById("btn_cancelar").style.visibility="visible";
-    
 
-}
+    document.getElementById(id).setAttribute("class", "table-warning");
+    id_previa=id;
+  }
+
+
+// function cancelar(){
+//         if (id_previa){
+//             document.getElementById(id_previa).setAttribute("class", "table-light");
+//           }
+//         document.getElementById("form_agreg").style.visibility="initial";
+//         document.getElementById("form_modif").style.visibility="hidden";
+//         document.getElementById("btn_cancelar").style.visibility="hidden";
+
+//   }
 </script>
   
 {% endblock %}
