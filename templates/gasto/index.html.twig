@@ -1,42 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}ControlApp{% endblock %}
+{% block title %}MisGastosApp{% endblock %}
 
 
 
 {% block body %}
     {{ parent() }}
     <img src="bailey-zindel-NRQV-hBF10M-unsplash.jpg" alt="fondo-naturaleza">
-    <h1>ControlApp! </h1>
+    <h1>MisGastosApp! </h1>
     <h2>Controla tus gastos de manera rapida y facil.</h2>
 
 <br>
   <form action="{{ path ('agregar') }}" id="form_agreg" style="visibility: visible;" method="POST">  
     <div class="mb-3">
       <label class="form-label">¿En que gasté?</label>
-      <input type="text" class="form-control" name="descripcion">
+      <input type="text" class="form-control" name="descripcion" id="input_descr">
     </div>
     <div class="mb-3">
       <label class="form-label">Monto</label>
-      <input type="number" class="form-control" name="monto" rows="3"></input>
+      <input type="number" class="form-control" name="monto" rows="3" id="input_mont"></input>
     </div>
-    <input type="submit" class="btn btn-light" id="btn_submit" value="Agregar">        
+    <input type="submit" class="btn btn-light" id="btn_submit" value="Agregar" >        
+    <a class="btn btn-light" href="{{path('index')}}" id="btn_cancelar" onclick="cancelar()">Cancelar</a>
   </form> 
 
-  
-
-    <form action="{{ path ('index') }}" id="form_modif" style="visibility: hidden;" method="POST">  
-      <div class="mb-3">
-        <label class="form-label">¿En que gasté?</label>
-        <input type="text" class="form-control" name="descripcion" >
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Monto</label>
-        <input type="number" class="form-control" name="monto" rows="3"></input>
-      </div>
-      <input type="submit" class="btn btn-light" id="btn_submit" value="Modificar">          
-    </form> 
-    <a class="btn btn-light" href="{{path('index')}}" style="visibility: hidden" id="btn_cancelar" onclick="cancelar()">Cancelar</a>
 
 <br>
 
@@ -60,7 +47,7 @@
       <td>{{item.descripcion}} </td>
       <td>${{item.monto}}</td>
       <td>
-        <a onclick="modificar('{{item.id}}')" class="btn btn-light d-inline">Modificar</a>          
+        <a onclick="modificar('{{item.id}}','{{item.descripcion}}','{{item.monto}}')" class="btn btn-light d-inline">Modificar</a>          
         <a href="{{path('eliminar',{'id':item.id})}}" class="btn btn-light d-inline">Eliminar</a>                       
       </td>      
       </tr>      
@@ -78,7 +65,7 @@
   .total{
     font-size: 50px;
     font-weight:bolder ;
-    color: rgb(238, 80, 52);
+    color: rgb(243, 80, 51);
   }
   
   button{
@@ -125,31 +112,25 @@ img{
 
 <script >
 
-  var id_previa
+  let id_previa
+  
 
-function modificar(id){
+function modificar(id,descripcion,monto){
+  
     if (id_previa){
       document.getElementById(id_previa).setAttribute("class", "table-light");
     }
-    document.getElementById("form_modif").setAttribute("action","{{path('modificar')}}"+"/"+id) ;    
-    document.getElementById("form_agreg").style.visibility="hidden";
-    document.getElementById("form_modif").style.visibility="visible";
-    document.getElementById("btn_cancelar").style.visibility="visible";
 
     document.getElementById(id).setAttribute("class", "table-warning");
+    document.getElementById("btn_submit").setAttribute("value", "Modificar");
+    document.getElementById("input_descr").setAttribute("value", descripcion);
+    document.getElementById("input_mont").setAttribute("value", monto);
+
+    document.getElementById("form_agreg").setAttribute("action","{{path('agregar')}}"+"/"+id) ;    
+
     id_previa=id;
   }
 
-
-// function cancelar(){
-//         if (id_previa){
-//             document.getElementById(id_previa).setAttribute("class", "table-light");
-//           }
-//         document.getElementById("form_agreg").style.visibility="initial";
-//         document.getElementById("form_modif").style.visibility="hidden";
-//         document.getElementById("btn_cancelar").style.visibility="hidden";
-
-//   }
 </script>
   
 {% endblock %}

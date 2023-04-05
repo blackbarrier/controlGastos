@@ -33,9 +33,9 @@ class GastoController extends AbstractController
 
 
     /**
-     * @Route("/agregar", name="agregar")
+     * @Route("/agregar/{id?null}", name="agregar")
      */
-    public function agregar(GastoRepository $repogasto )
+    public function agregar($id, GastoRepository $repogasto )
     {
 
         if (! $_POST
@@ -45,9 +45,16 @@ class GastoController extends AbstractController
             return $this->redirectToRoute('index');
             }
 
+        
         $descripcion=$_POST["descripcion"];
         $monto=$_POST["monto"];
+
+        if($id=="null"){
         $item = new Gasto();
+        }else{
+        $item = $repogasto->findOneBy(["id"=>$id]); 
+        }      
+       
         $item->setDescripcion($descripcion);
         $item->setMonto($monto);
         $repogasto->add($item,TRUE);
@@ -61,22 +68,22 @@ class GastoController extends AbstractController
      */
 
     public function modificar($id, GastoRepository  $repogasto)    {
-
-        if (! $_POST
-        || trim($_POST['descripcion'])   === ''
-        || trim($_POST['monto'])     === ''
-        ) {
-        return $this->redirectToRoute('index');
-        }
+        dd("Estas entrando en el lugar incorrecto");
+        // if (! $_POST
+        // || trim($_POST['descripcion'])   === ''
+        // || trim($_POST['monto'])     === ''
+        // ) {
+        // return $this->redirectToRoute('index');
+        // }
         
-        $descripcion=$_POST["descripcion"];;
-        $monto=$_POST["monto"];
+        // $descripcion=$_POST["descripcion"];;
+        // $monto=$_POST["monto"];
 
-        $item = $repogasto->findOneBy(["id"=>$id]);        
-        $item->setDescripcion($descripcion);
-        $item->setMonto($monto);
-        $repogasto->add($item, true);
-        return $this->redirectToRoute('index'); 
+        // $item = $repogasto->findOneBy(["id"=>$id]);        
+        // $item->setDescripcion($descripcion);
+        // $item->setMonto($monto);
+        // $repogasto->add($item, true);
+        // return $this->redirectToRoute('index'); 
         }    
 
 
