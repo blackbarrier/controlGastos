@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GastosController!{% endblock %}
+{% block title %}ControlApp{% endblock %}
 
 
 
 {% block body %}
     {{ parent() }}
     <img src="bailey-zindel-NRQV-hBF10M-unsplash.jpg" alt="fondo-naturaleza">
-
-    <h2>Control de gastos</h2>
+    <h1>ControlApp! </h1>
+    <h2>Controla tus gastos de manera rapida y facil.</h2>
 
 <br>
   <form action="{{ path ('agregar') }}" id="form_agreg" style="visibility: visible;" method="POST">  
